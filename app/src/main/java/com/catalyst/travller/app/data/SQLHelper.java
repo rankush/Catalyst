@@ -45,7 +45,7 @@ public class SQLHelper extends SQLiteOpenHelper {
     public static final String EVENT_ATTENDEES_TABLE_NAME = "EventAttendeesTable";
 
     private static final String WHERE_EQUALS = " =? ";
-    private static final String WHERE_GREATER= " >=? ";
+    private static final String WHERE_GREATER = " >=? ";
 
 
     public SQLHelper(Context context) {
@@ -93,7 +93,7 @@ public class SQLHelper extends SQLiteOpenHelper {
 
     // Event CRUD Operation
 
-    public boolean insertEvent(EventInfoBean event) {
+    public long insertEvent(EventInfoBean event) {
         SQLiteDatabase db = this.getWritableDatabase();
         try {
             ContentValues values = new ContentValues();
@@ -103,23 +103,23 @@ public class SQLHelper extends SQLiteOpenHelper {
             values.put(COL_EVENT_NAME, event.getEventName());
             values.put(COL_EVENT_DESCRIPTION, event.getEventDesc());
             values.put(COL_EVENT_STATUS, event.getEventStatus());
-            db.insert(EVENT_TABLE_NAME, null, values);
+            long rowID = db.insert(EVENT_TABLE_NAME, null, values);
             db.close();
 
-            return true;
+            return rowID;
         } catch (SQLiteException se) {
             Log.e(TAG, Log.getStackTraceString(se));
-            return false;
+            return -1;
         } catch (Exception e) {
             Log.v(TAG, Log.getStackTraceString(e));
-            return false;
+            return -1;
         } finally {
             db.close();
         }
     }
 
 
-    public List<EventInfoBean> getNewEvents(long time){
+    public List<EventInfoBean> getNewEvents(long time) {
         SQLiteDatabase db = this.getReadableDatabase();
         List<EventInfoBean> eventList = new ArrayList<EventInfoBean>();
         try {
@@ -137,7 +137,7 @@ public class SQLHelper extends SQLiteOpenHelper {
                     event.setEventStatus(cursor.getInt(cursor.getColumnIndex(COL_EVENT_STATUS)));
 
                     eventList.add(event);
-                }while(cursor.moveToNext());
+                } while (cursor.moveToNext());
             }
         } catch (SQLiteException se) {
             Log.v(TAG,
@@ -152,7 +152,8 @@ public class SQLHelper extends SQLiteOpenHelper {
         return eventList;
 
     }
-    public List<EventInfoBean> getAllEvents(){
+
+    public List<EventInfoBean> getAllEvents() {
         SQLiteDatabase db = this.getReadableDatabase();
         List<EventInfoBean> eventList = new ArrayList<EventInfoBean>();
         try {
@@ -170,7 +171,7 @@ public class SQLHelper extends SQLiteOpenHelper {
                     event.setEventStatus(cursor.getInt(cursor.getColumnIndex(COL_EVENT_STATUS)));
 
                     eventList.add(event);
-                }while(cursor.moveToNext());
+                } while (cursor.moveToNext());
             }
         } catch (SQLiteException se) {
             Log.v(TAG,
@@ -212,7 +213,7 @@ public class SQLHelper extends SQLiteOpenHelper {
         }
     }
 
-    public List<EventInfoBean> getEventsCreatedByUser(String user){
+    public List<EventInfoBean> getEventsCreatedByUser(String user) {
         SQLiteDatabase db = this.getReadableDatabase();
         List<EventInfoBean> eventList = new ArrayList<EventInfoBean>();
         try {
@@ -230,7 +231,7 @@ public class SQLHelper extends SQLiteOpenHelper {
                     event.setEventStatus(cursor.getInt(cursor.getColumnIndex(COL_EVENT_STATUS)));
 
                     eventList.add(event);
-                }while(cursor.moveToNext());
+                } while (cursor.moveToNext());
             }
         } catch (SQLiteException se) {
             Log.v(TAG,
@@ -245,17 +246,17 @@ public class SQLHelper extends SQLiteOpenHelper {
         return eventList;
     }
 
-    public List<EventInfoBean> getEventsAttendingByUser(String user){
+    public List<EventInfoBean> getEventsAttendingByUser(String user) {
         SQLiteDatabase db = this.getReadableDatabase();
         List<EventInfoBean> eventList = new ArrayList<EventInfoBean>();
         try {
 
-            String query = "SELECT * FROM "+EVENT_TABLE_NAME +
-                    " WHERE "+ COL_EVENT_ID +" IN ( "+
-                    "SELECT DISTINCT "+ COL_EVENT_ID + " FROM " + EVENT_ATTENDEES_TABLE_NAME +
-                    "WHERE " + COL_USER_ID +" = " + user + " )";
+            String query = "SELECT * FROM " + EVENT_TABLE_NAME +
+                    " WHERE " + COL_EVENT_ID + " IN ( " +
+                    "SELECT DISTINCT " + COL_EVENT_ID + " FROM " + EVENT_ATTENDEES_TABLE_NAME +
+                    "WHERE " + COL_USER_ID + " = " + user + " )";
 
-            Cursor cursor = db.rawQuery(query,null);
+            Cursor cursor = db.rawQuery(query, null);
             if (cursor != null && cursor.moveToFirst()) {
                 do {
                     EventInfoBean event = new EventInfoBean(
@@ -268,7 +269,7 @@ public class SQLHelper extends SQLiteOpenHelper {
                     event.setEventStatus(cursor.getInt(cursor.getColumnIndex(COL_EVENT_STATUS)));
 
                     eventList.add(event);
-                }while(cursor.moveToNext());
+                } while (cursor.moveToNext());
             }
         } catch (SQLiteException se) {
             Log.v(TAG,
@@ -283,7 +284,6 @@ public class SQLHelper extends SQLiteOpenHelper {
         return eventList;
 
     }
-
 
 
     public boolean validateUser(String user, String password) {
@@ -333,7 +333,8 @@ public class SQLHelper extends SQLiteOpenHelper {
             db.close();
         }
     }
-    public List<UserInfoBean> getLocation(int eventid){
+
+    public List<UserInfoBean> getLocation(int eventid) {
         SQLiteDatabase db = this.getReadableDatabase();
         List<UserInfoBean> userList = new ArrayList<UserInfoBean>();
         try {
@@ -348,7 +349,7 @@ public class SQLHelper extends SQLiteOpenHelper {
                             cursor.getLong(cursor.getColumnIndex(COL_USER_PHONE))
                     );
                     userList.add(user);
-                }while(cursor.moveToNext());
+                } while (cursor.moveToNext());
             }
         } catch (SQLiteException se) {
             Log.v(TAG,
@@ -389,7 +390,7 @@ public class SQLHelper extends SQLiteOpenHelper {
         }
     }
 
-    public List<UserInfoBean> getEventAttendies(int eventid){
+    public List<UserInfoBean> getEventAttendies(int eventid) {
         SQLiteDatabase db = this.getReadableDatabase();
         List<UserInfoBean> userList = new ArrayList<UserInfoBean>();
         try {
@@ -402,9 +403,9 @@ public class SQLHelper extends SQLiteOpenHelper {
                             null,
                             cursor.getString(cursor.getColumnIndex(COL_USER_NAME)),
                             cursor.getLong(cursor.getColumnIndex(COL_USER_PHONE))
-                            );
+                    );
                     userList.add(user);
-                }while(cursor.moveToNext());
+                } while (cursor.moveToNext());
             }
         } catch (SQLiteException se) {
             Log.v(TAG,

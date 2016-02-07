@@ -11,6 +11,10 @@ import android.view.ViewGroup;
 
 import com.catalyst.travller.app.R;
 import com.catalyst.travller.app.adapter.NewEventAdapter;
+import com.catalyst.travller.app.data.EventInfoBean;
+import com.catalyst.travller.app.data.SQLHelper;
+
+import java.util.List;
 
 /**
  * Created by jitendra.karma on 06/02/2016.
@@ -28,8 +32,9 @@ public class NewEventFragment extends Fragment {
         return v;
     }
 
-    private String[] getArray() {
-        return new String[]{"New Event 1", "New Event 2", "New Event 3", "New Event 4", "New Event 5"};
+    private List<EventInfoBean> getArray() {
+        SQLHelper db = new SQLHelper(getActivity());
+        return db.getAllEvents();
     }
 
     private void initEventList() {

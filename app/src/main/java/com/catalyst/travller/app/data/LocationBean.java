@@ -7,13 +7,13 @@ public class LocationBean {
 
     private double longitude;
     private double latitude;
-    private int eventId;
+    private long eventId;
     private String name;
     private String desc;
 
 
 
-    public LocationBean(double longitude, double latitude, int eventId, String name, String desc) {
+    public LocationBean(double longitude, double latitude, long eventId, String name, String desc) {
         this.longitude = longitude;
         this.latitude = latitude;
         this.eventId = eventId;
@@ -21,11 +21,11 @@ public class LocationBean {
         this.desc = desc;
     }
 
-    public int getEventId() {
+    public long getEventId() {
         return eventId;
     }
 
-    public void setEventId(int eventId) {
+    public void setEventId(long eventId) {
         this.eventId = eventId;
     }
 

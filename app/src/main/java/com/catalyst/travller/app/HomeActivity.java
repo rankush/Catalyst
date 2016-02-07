@@ -3,7 +3,9 @@ package com.catalyst.travller.app;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -15,13 +17,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.catalyst.travller.app.data.EventInfoBean;
 import com.catalyst.travller.app.fragment.CreateEventFragment;
 import com.catalyst.travller.app.fragment.EventDetailFragment;
 import com.catalyst.travller.app.fragment.EventListFragment;
 import com.catalyst.travller.app.fragment.NewEventFragment;
 import com.catalyst.travller.app.fragment.SearchEventFragment;
 import com.catalyst.travller.app.listener.RecyclerViewCustomListener;
+import com.catalyst.travller.app.utils.AppConstants;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, RecyclerViewCustomListener {
@@ -39,7 +44,15 @@ public class HomeActivity extends AppCompatActivity
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createEventFragment();
+                SharedPreferences sharedPreferences = getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
+                String userName = sharedPreferences.getString(AppConstants.USER_NAME, null);
+                if (userName == null) {
+                    Toast.makeText(HomeActivity.this, "Please login first", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                } else {
+                    createEventFragment();
+                }
             }
         });
 
@@ -63,27 +76,30 @@ public class HomeActivity extends AppCompatActivity
         fragmentTransaction.commit();
     }
 
-    private void showEventDetailFragment() {
+    private void showEventDetailFragment(EventInfoBean eventInfoBean) {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.addToBackStack("Event Detail");
         EventDetailFragment event = new EventDetailFragment();
+        event.setEventDetail(eventInfoBean);
         fragmentTransaction.replace(R.id.fragment_container, event);
         fragmentTransaction.commit();
     }
+
+    private CreateEventFragment event;
 
     private void createEventFragment() {
         mFab.setVisibility(View.GONE);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.addToBackStack("Create Event");
-        CreateEventFragment event = new CreateEventFragment();
+        event = new CreateEventFragment();
         fragmentTransaction.replace(R.id.fragment_container, event);
         fragmentTransaction.commit();
     }
 
     @Override
-    public void onItemClick(View v, int position, int screen) {
+    public void onItemClick(View v, int position, int screen, Object object) {
         mFab.setVisibility(View.GONE);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -100,13 +116,22 @@ public class HomeActivity extends AppCompatActivity
                 fragment = new NewEventFragment();
             }
         } else if (screen == NEW_EVENT_SCREEN) {
-            showEventDetailFragment();
+            showEventDetailFragment((EventInfoBean) object);
         }
         if (fragment != null) {
             fragmentTransaction.replace(R.id.fragment_container, fragment);
             fragmentTransaction.commit();
         }
     }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == 0 && requestCode == Activity.RESULT_OK && data != null) {
+//            Bundle bundle = data.getExtras();
+//            event.setList((ArrayList<LatLng>) bundle.getSerializable("Locations"));
+//        }
+//    }
 
     @Override
     public void onBackPressed() {

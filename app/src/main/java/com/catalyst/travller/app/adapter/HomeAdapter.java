@@ -40,7 +40,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeAdapterHol
 
         @Override
         public void onClick(View v) {
-            ((RecyclerViewCustomListener) v.getContext()).onItemClick(v, getLayoutPosition(), RecyclerViewCustomListener.EVENT_LIST_SCREEN);
+            ((RecyclerViewCustomListener) v.getContext()).onItemClick(v, getLayoutPosition(), RecyclerViewCustomListener.EVENT_LIST_SCREEN, null);
         }
     }
 

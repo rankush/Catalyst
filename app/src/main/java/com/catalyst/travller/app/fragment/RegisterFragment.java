@@ -55,7 +55,7 @@ public class RegisterFragment extends Fragment {
         }
 
         UserInfoBean registerUser = new UserInfoBean(edTxtEmail.getText().toString(), edTxtPassword.getText().toString(),
-                edFName.getText().toString() + " " + edLName.getText().toString(), Integer.parseInt(edTxtMobile.getText().toString()));
+                edFName.getText().toString() + " " + edLName.getText().toString(), Long.parseLong(edTxtMobile.getText().toString()));
         return registerUser;
     }
 

@@ -16,7 +16,6 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:inputType="textEmailAddress"
             android:textColor="@android:color/white">
 
             <EditText
@@ -24,6 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Enter user name"
+                android:inputType="textEmailAddress"
                 android:maxLines="1" />
         </android.support.design.widget.TextInputLayout>
 

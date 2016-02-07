@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.catalyst.travller.app.R;
+import com.catalyst.travller.app.data.EventInfoBean;
+
+import java.text.SimpleDateFormat;
 
 /**
  * Created by jitendra.karma on 06/02/2016.
@@ -16,6 +19,7 @@ import com.catalyst.travller.app.R;
 public class EventDetailFragment extends Fragment {
 
     private TextView mEventName, mEventDescription, mStartTime, mEndTime;
+    private EventInfoBean mInfoBean;
 
     @Nullable
     @Override
@@ -34,10 +38,26 @@ public class EventDetailFragment extends Fragment {
             }
         });
 
+        initEventDetail();
+
         return view;
     }
 
     private void OnJoinButtonClick(View v) {
 
+    }
+
+    public void setEventDetail(EventInfoBean infoBean) {
+        mInfoBean = infoBean;
+    }
+
+    private void initEventDetail() {
+        if (mInfoBean != null) {
+            mEventName.setText(mInfoBean.getEventName());
+            mEventDescription.setText(mInfoBean.getEventDesc());
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
+            mStartTime.setText(sdf.format(mInfoBean.getEventStartTime()));
+            mEndTime.setText(sdf.format(mInfoBean.getEventStartTime()));
+        }
     }
 }

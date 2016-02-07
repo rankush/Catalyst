@@ -8,16 +8,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.catalyst.travller.app.R;
+import com.catalyst.travller.app.data.EventInfoBean;
 import com.catalyst.travller.app.listener.RecyclerViewCustomListener;
+
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 /**
  * Created by jitendra.karma on 06/02/2016.
  */
 public class NewEventAdapter extends RecyclerView.Adapter<NewEventAdapter.HomeAdapterHolder> {
 
-    private String[] mList;
+    private List<EventInfoBean> mList;
 
-    public NewEventAdapter(String[] list) {
+    public NewEventAdapter(List<EventInfoBean> list) {
         mList = list;
     }
 
@@ -42,7 +46,8 @@ public class NewEventAdapter extends RecyclerView.Adapter<NewEventAdapter.HomeAd
 
         @Override
         public void onClick(View v) {
-            ((RecyclerViewCustomListener) v.getContext()).onItemClick(v, getLayoutPosition(), RecyclerViewCustomListener.NEW_EVENT_SCREEN);
+            ((RecyclerViewCustomListener) v.getContext()).onItemClick(v, getLayoutPosition(),
+                    RecyclerViewCustomListener.NEW_EVENT_SCREEN, mList.get(getLayoutPosition()));
         }
     }
 
@@ -54,13 +59,19 @@ public class NewEventAdapter extends RecyclerView.Adapter<NewEventAdapter.HomeAd
 
     @Override
     public void onBindViewHolder(HomeAdapterHolder holder, int position) {
-        holder.mEventName.setText(mList[position]);
+        holder.mEventName.setText(mList.get(position).getEventName());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
+        String date = sdf.format(mList.get(position).getEventStartTime());
+        holder.mEventStartTime.setText(date);
+        date = sdf.format(mList.get(position).getEventEndTime());
+        holder.mEventEndTime.setText(date);
+
         holder.mEventImage.setImageResource(R.drawable.card_bg);
     }
 
     @Override
     public int getItemCount() {
-        return mList == null ? 0 : mList.length;
+        return mList == null ? 0 : mList.size();
     }
 
     @Override

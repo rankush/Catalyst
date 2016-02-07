@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.catalyst.travller.app.R;
 import com.catalyst.travller.app.data.SQLHelper;
+import com.catalyst.travller.app.utils.AppConstants;
 
 /**
  * Created by jitendra.karma on 07/02/2016.
@@ -20,14 +21,13 @@ import com.catalyst.travller.app.data.SQLHelper;
 public class LoginFragment extends Fragment {
 
     private SharedPreferences preferenceManager;
-    private static final String PREF_NAME = "traveller";
     private SQLHelper dbHelper;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.layout_login, container, false);
-        preferenceManager = getActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        preferenceManager = getActivity().getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
         dbHelper = new SQLHelper(getActivity());
         view.findViewById(R.id.submit_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +85,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void saveUser(String user) {
-        preferenceManager.edit().putString("userName", user).commit();
+        preferenceManager.edit().putString(AppConstants.USER_NAME, user).commit();
         getActivity().finish();
     }
 

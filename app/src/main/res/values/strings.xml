@@ -13,4 +13,5 @@
 
     <string name="SIGN_IN">Sign In</string>
     <string name="Sign_up">Sign Up</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyAu0_XxggGoj86qjfkHK-U0VZ8yIfMrGTI</string>
 </resources>

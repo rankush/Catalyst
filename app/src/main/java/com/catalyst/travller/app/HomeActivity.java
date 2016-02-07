@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.catalyst.travller.app.fragment.CreateEventFragment;
 import com.catalyst.travller.app.fragment.EventDetailFragment;
 import com.catalyst.travller.app.fragment.EventListFragment;
 import com.catalyst.travller.app.fragment.NewEventFragment;
@@ -26,6 +26,7 @@ import com.catalyst.travller.app.listener.RecyclerViewCustomListener;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, RecyclerViewCustomListener {
 
+    private FloatingActionButton mFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +35,11 @@ public class HomeActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                createEventFragment();
             }
         });
 
@@ -66,13 +66,25 @@ public class HomeActivity extends AppCompatActivity
     private void showEventDetailFragment() {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.addToBackStack("Event Detail");
         EventDetailFragment event = new EventDetailFragment();
+        fragmentTransaction.replace(R.id.fragment_container, event);
+        fragmentTransaction.commit();
+    }
+
+    private void createEventFragment() {
+        mFab.setVisibility(View.GONE);
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.addToBackStack("Create Event");
+        CreateEventFragment event = new CreateEventFragment();
         fragmentTransaction.replace(R.id.fragment_container, event);
         fragmentTransaction.commit();
     }
 
     @Override
     public void onItemClick(View v, int position, int screen) {
+        mFab.setVisibility(View.GONE);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Fragment fragment = null;
@@ -103,7 +115,11 @@ public class HomeActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             FragmentManager fm = getFragmentManager();
-            if (fm.getBackStackEntryCount() > 0) {
+            int count = fm.getBackStackEntryCount();
+            if (count == 1) {
+                mFab.setVisibility(View.VISIBLE);
+            }
+            if (count > 0) {
                 fm.popBackStack();
             } else {
                 super.onBackPressed();
@@ -139,8 +155,8 @@ public class HomeActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
+        if (id == R.id.create_event) {
+            createEventFragment();
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_share) {

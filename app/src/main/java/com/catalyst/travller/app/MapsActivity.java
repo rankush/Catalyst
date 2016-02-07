@@ -46,7 +46,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * installed Google Play services and returned to the app.
      */
     List<LatLng> locationList = new ArrayList<LatLng>();
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -109,9 +108,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         public void onRouteCreated(PolylineOptions lineOptions) {
             // Drawing polyline in the Google Map for the i-th route
-            if (lineOptions != null) {
+            if (lineOptions != null){
                 mMap.addPolyline(lineOptions);
-            } else {
+            }else{
                 Toast.makeText(getApplicationContext(),
                         "Sorry no Roads found.. Please check for ship or plane .. :) ",
                         Toast.LENGTH_SHORT).show();
@@ -119,13 +118,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     };
 
-    private String getDirectionsUrl(LatLng origin, LatLng dest) {
-        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+    private String getDirectionsUrl(LatLng origin,LatLng dest){
+
+
+        String str_origin = "origin="+origin.latitude+","+origin.longitude;
+        String str_dest = "destination="+dest.latitude+","+dest.longitude;
         String sensor = "sensor=false";
-        String parameters = str_origin + "&" + str_dest + "&" + sensor;
+        String parameters = str_origin+"&"+str_dest+"&"+sensor;
         String output = "json";
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
+        String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
         return url;
     }
 

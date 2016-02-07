@@ -17,8 +17,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.catalyst.travller.app.fragment.EventDetailFragment;
 import com.catalyst.travller.app.fragment.EventListFragment;
 import com.catalyst.travller.app.fragment.NewEventFragment;
+import com.catalyst.travller.app.fragment.SearchEventFragment;
 import com.catalyst.travller.app.listener.RecyclerViewCustomListener;
 
 public class HomeActivity extends AppCompatActivity
@@ -61,6 +63,14 @@ public class HomeActivity extends AppCompatActivity
         fragmentTransaction.commit();
     }
 
+    private void showEventDetailFragment() {
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        EventDetailFragment event = new EventDetailFragment();
+        fragmentTransaction.replace(R.id.fragment_container, event);
+        fragmentTransaction.commit();
+    }
+
     @Override
     public void onItemClick(View v, int position, int screen) {
         FragmentManager fragmentManager = getFragmentManager();
@@ -68,11 +78,17 @@ public class HomeActivity extends AppCompatActivity
         Fragment fragment = null;
         if (screen == EVENT_LIST_SCREEN) {
             if (position == 0) {
-                fragmentTransaction.addToBackStack("SepcificEvent");
+                fragmentTransaction.addToBackStack("NewEvent");
+                fragment = new NewEventFragment();
+            } else if (position == 1) {
+                fragmentTransaction.addToBackStack("Search Event");
+                fragment = new SearchEventFragment();
+            } else if (position == 2) {
+                fragmentTransaction.addToBackStack("All Event");
                 fragment = new NewEventFragment();
             }
         } else if (screen == NEW_EVENT_SCREEN) {
-
+            showEventDetailFragment();
         }
         if (fragment != null) {
             fragmentTransaction.replace(R.id.fragment_container, fragment);
